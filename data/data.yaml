@@ -1,4 +1,4 @@
-path: dataset1
+path: /kaggle/input/headdata/dataset1
 
 train: images/train
 val: images/val
