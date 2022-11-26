@@ -14,6 +14,7 @@ Models:     https://github.com/ultralytics/yolov5/tree/master/models
 Datasets:   https://github.com/ultralytics/yolov5/tree/master/data
 Tutorial:   https://github.com/ultralytics/yolov5/wiki/Train-Custom-Data
 """
+# python train.py --data data.yaml --epochs 50 --weights last.pt  --cfg yolo.yaml  --batch-size 16
 
 import argparse
 import math

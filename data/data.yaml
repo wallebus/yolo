@@ -1,8 +1,8 @@
-path: /kaggle/input/headdata/dataset1
+path: dataset1
 
 train: images/train
 val: images/val
 
 nc: 1
 
-names: ['person']
+names: ["person"]
