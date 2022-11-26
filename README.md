@@ -1,14 +1,20 @@
 ## <div align="center">关于本仓库</div>
 
 - 说明
+
   - 基础环境：[YOLOv5](https://github.com/ultralytics/yolov5) `yolov5s`
   - 训练数据： [HEAD-Dataset](https://github.com/HCIILAB/SCUT-HEAD-Dataset-Release)（某高校监控图 2000 张，网络收集 2400 张）
-  - 训练环境：租用 [AutoDl](https://www.autodl.com/home) 云服务器所提供的`yolov5` 环境 `ubuntu` `RTX2080TI 11G`
-  - 训练结果：[image](./runs/train/exp/val_batch0_labels.jpg) [charts](./runs/train/exp/results.png)
-  - 使用`tfjs`部署在网页 [person-count](https://person-count.netlify.app) (图片推断于本地进行,模型大小为 22M)
-  - 本地推断：`python detect.py --weights runs/train/exp3/weights/best.pt`
-    ![img](.github/image.png)
+    ![result](.github/data.png)
     <br>
+  - 训练环境：租用 [AutoDl](https://www.autodl.com/home) 云服务器所提供的`yolov5` 环境 `ubuntu` `RTX2080TI 11G`
+  - 训练结果：训练轮数为 100 map_0.5=0.935 [image](./runs/train/exp/val_batch0_labels.jpg) ![charts](./runs/train/exp/results.png)
+  - 使用`tfjs`部署在网页 https://person-count.netlify.app (图片推断于本地进行,模型大小为 22M)
+  - 本地推断：`python detect.py --weights runs/train/exp3/weights/best.pt`
+    <br>
+
+    ![result](.github/image.png)
+    <br>
+
 - 使用（推荐云服务器环境）
   - 环境克隆
     ```bash
@@ -34,7 +40,8 @@
   - 训练完成的结果位于 runs/train/
   - 模型格式转换请参考 export.py 中的命令
 
-<br>
+---
+
 ## <div align="center">官方</div>
 
 <div align="center">
