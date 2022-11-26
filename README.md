@@ -7,6 +7,7 @@
   - 训练结果：[image](./runs/train/exp/val_batch0_labels.jpg) [charts](./runs/train/exp/results.png)
   - 使用`tfjs`部署在网页 [person-count](https://person-count.netlify.app) (图片推断于本地进行,模型大小为 22M)
   - 本地推断：`python detect.py --weights runs/train/exp3/weights/best.pt`
+    ![img](.github/image.png)
     <br>
 - 使用（推荐云服务器环境）
   - 环境克隆
