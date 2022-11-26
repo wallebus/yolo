@@ -25,9 +25,7 @@
 *.zip
 
 storage.googleapis.com
-runs/*
-data/*
-data/images/*
+!runs/*
 !data/*.yaml
 !data/hyps
 !data/scripts
@@ -39,7 +37,7 @@ data/images/*
 datast/*
 dataset1/*
 results*.csv
-
+!.github/*.png
 # Datasets -------------------------------------------------------------------------------------------------------------
 coco/
 coco128/

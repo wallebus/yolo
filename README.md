@@ -1,14 +1,20 @@
 ## <div align="center">关于本仓库</div>
 
 - 说明
+
   - 基础环境：[YOLOv5](https://github.com/ultralytics/yolov5) `yolov5s`
   - 训练数据： [HEAD-Dataset](https://github.com/HCIILAB/SCUT-HEAD-Dataset-Release)（某高校监控图 2000 张，网络收集 2400 张）
-  - 训练环境：租用 [AutoDl](https://www.autodl.com/home) 云服务器所提供的`yolov5` 环境 `ubuntu` `RTX2080TI 11G`
-  - 训练结果：[image](./runs/train/exp/val_batch0_labels.jpg) [charts](./runs/train/exp/results.png)
-  - 使用`tfjs`部署在网页 [person-count](https://person-count.netlify.app) (图片推断于本地进行,模型大小为 22M)
-  - 本地推断：`python detect.py --weights runs/train/exp3/weights/best.pt`
-    ![img](.github/image.png)
+    ![result](.github/data.png)
     <br>
+  - 训练环境：租用 [AutoDl](https://www.autodl.com/home) 云服务器所提供的`yolov5` 环境 `ubuntu` `RTX2080TI 11G`
+  - 训练结果：训练轮数为 100 map_0.5=0.935 [image](./runs/train/exp/val_batch0_labels.jpg) ![charts](./runs/train/exp/results.png)
+  - 使用`tfjs`部署在网页 https://person-count.netlify.app (图片推断于本地进行,模型大小为 22M)
+  - 本地推断：`python detect.py --weights runs/train/exp3/weights/best.pt`
+    <br>
+
+    ![result](.github/image.png)
+    <br>
+
 - 使用（推荐云服务器环境）
   - 环境克隆
     ```bash
@@ -34,7 +40,8 @@
   - 训练完成的结果位于 runs/train/
   - 模型格式转换请参考 export.py 中的命令
 
-<br>
+---
+
 ## <div align="center">官方</div>
 
 <div align="center">
@@ -121,7 +128,7 @@ python train.py --data coco.yaml --epochs 300 --weights '' --cfg yolov5n.yaml  -
                                                                  yolov5x                    16
 ```
 
-<img width="800" src="https://user-images.githubusercontent.com/26833433/90222759-949d8800-ddc1-11ea-9fa1-1c97eed2b963.png">
+<img width="800" src="./.github/90222759-949d8800-ddc1-11ea-9fa1-1c97eed2b963.png">
 
 </details>
 
@@ -149,25 +156,8 @@ python train.py --data coco.yaml --epochs 300 --weights '' --cfg yolov5n.yaml  -
 
 ## <div align="center">Integrations</div>
 
-<br>
 <a align="center" href="https://bit.ly/ultralytics_hub" target="_blank">
-<img width="100%" src="https://github.com/ultralytics/assets/raw/master/im/integrations-loop.png"></a>
 <br>
-<br>
-
-<div align="center">
-  <a href="https://roboflow.com/?ref=ultralytics">
-    <img src="https://github.com/ultralytics/yolov5/releases/download/v1.0/logo-roboflow.png" width="10%" /></a>
-  <img src="https://github.com/ultralytics/assets/raw/master/social/logo-transparent.png" width="15%" height="0" alt="" />
-  <a href="https://cutt.ly/yolov5-readme-clearml">
-    <img src="https://github.com/ultralytics/yolov5/releases/download/v1.0/logo-clearml.png" width="10%" /></a>
-  <img src="https://github.com/ultralytics/assets/raw/master/social/logo-transparent.png" width="15%" height="0" alt="" />
-  <a href="https://bit.ly/yolov5-readme-comet">
-    <img src="https://github.com/ultralytics/yolov5/releases/download/v1.0/logo-comet.png" width="10%" /></a>
-  <img src="https://github.com/ultralytics/assets/raw/master/social/logo-transparent.png" width="15%" height="0" alt="" />
-  <a href="https://bit.ly/yolov5-deci-platform">
-    <img src="https://github.com/ultralytics/yolov5/releases/download/v1.0/logo-deci.png" width="10%" /></a>
-</div>
 
 |                                                           Roboflow                                                           |                                                           ClearML ⭐ NEW                                                            |                                                                       Comet ⭐ NEW                                                                        |                                                              Deci ⭐ NEW                                                               |
 | :--------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------: |
@@ -185,7 +175,7 @@ python train.py --data coco.yaml --epochs 300 --weights '' --cfg yolov5n.yaml  -
 <details>
   <summary>YOLOv5-P5 640 图像 (点击扩展)</summary>
 
-<p align="left"><img width="800" src="https://user-images.githubusercontent.com/26833433/155040757-ce0934a3-06a6-43dc-a979-2edbbd69ea0e.png"></p>
+<p align="left"><img width="800" src=".github/155040757-ce0934a3-06a6-43dc-a979-2edbbd69ea0e.png"></p>
 </details>
 <details>
   <summary>图片注释 (点击扩展)</summary>
