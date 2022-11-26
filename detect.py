@@ -172,6 +172,134 @@ def run(
                     if save_crop:
                         save_one_box(xyxy, imc, file=save_dir / 'crops' / names[c] / f'{p.stem}.jpg', BGR=True)
 
+                        
+                         ################################
+                        #stereo code
+                        p = num
+                        string = ''
+                        #print("P is %d" %p )
+                        # 读取数据集的图片
+                        #iml = cv2.imread('./stereo/yolo/zuo/%szuo%d.bmp' %(string,p) )  # 左图
+                        #imr = cv2.imread('./stereo/yolo/you/%syou%d.bmp' %(string,p) )  # 右图
+
+                        #iml = cv2.imread('./stereo/yolo/zuo/%szuo%d.bmp' %(string,p) )  # 左图
+                        #imr = cv2.imread('./stereo/yolo/you/%syou%d.bmp' %(string,p) )  # 右图
+                        
+                        #height_0, width_0 = im0.shape[0:2]
+
+                        #print("width_0 =  %d "  % width_0)
+                        #print("height_0 = %d "  % height_0)
+
+                        
+                        iml = im0[0:int(height_0), 0:int(width_0/2)]
+                        imr = im0[0:int(height_0), int(width_0/2):int(width_0) ]
+
+                        height, width = iml.shape[0:2]
+
+                        #cv2.imshow("iml",iml)
+                        #cv2.imshow("imr",im0)
+                        #cv2.waitKey(0)
+
+                        #print("width =  %d "  % width)
+                        #print("height = %d "  % height)
+
+                        # 读取相机内参和外参
+                        config = stereoconfig_040_2.stereoCamera()
+
+                        # 立体校正
+                        map1x, map1y, map2x, map2y, Q = getRectifyTransform(height, width, config)  # 获取用于畸变校正和立体校正的映射矩阵以及用于计算像素空间坐标的重投影矩阵
+                        #print("Print Q!")
+                        #print("Q[2,3]:%.3f"%Q[2,3])
+                        iml_rectified, imr_rectified = rectifyImage(iml, imr, map1x, map1y, map2x, map2y)
+
+
+                            
+                        # 绘制等间距平行线，检查立体校正的效果
+                        line = draw_line(iml_rectified, imr_rectified)
+                        #cv2.imwrite('./yolo/%s检验%d.png' %(string,p), line)
+
+                        # 消除畸变
+                        iml = undistortion(iml, config.cam_matrix_left, config.distortion_l)
+                        imr = undistortion(imr, config.cam_matrix_right, config.distortion_r)
+                    
+                        # 立体匹配
+                        iml_, imr_ = preprocess(iml, imr)  # 预处理，一般可以削弱光照不均的影响，不做也可以
+
+                        iml_rectified_l, imr_rectified_r = rectifyImage(iml_, imr_, map1x, map1y, map2x, map2y)
+                        
+                        disp, _ = stereoMatchSGBM(iml_rectified_l, imr_rectified_r, True) 
+                        #cv2.imwrite('./yolo/%s视差%d.png' %(string,p), disp)
+
+
+                        # 计算像素点的3D坐标（左相机坐标系下）
+                        points_3d = cv2.reprojectImageTo3D(disp, Q)  # 可以使用上文的stereo_config.py给出的参数
+
+                        #points_3d = points_3d
+
+                        '''
+                        #print("x is :%.3f" %points_3d[int(y), int(x), 0] )
+                            print('点 (%d, %d) 的三维坐标 (x:%.3fcm, y:%.3fcm, z:%.3fcm)' % (int(x), int(y), 
+                            points_3d[int(y), int(x), 0]/10, 
+                            points_3d[int(y), int(x), 1]/10, 
+                            points_3d[int(y), int(x), 2]/10) )
+                        '''
+                        count = 0
+                        #try:
+                        while( (points_3d[int(y), int(x), 2] < 0) | (points_3d[int(y), int(x), 2] > 2500) ):
+
+                            count += 1
+                            x += count
+                            if( 0 < points_3d[int(y), int(x), 2] < 2300 ):
+                                break
+                            y += count
+                            if( 0 < points_3d[int(y), int(x), 2] < 2300 ):
+                                break
+
+                            count += 1
+                            x -= count
+                            if( 0 < points_3d[int(y), int(x), 2] < 2300 ):
+                                break
+                            y -= count
+                            if( 0 < points_3d[int(y), int(x), 2] < 2300 ):
+                                break
+
+                            #if(count%2==1):
+                            #    x += 1
+                            #else:
+                            #    y += 1
+
+                            
+
+                        text_cxy = "*"
+                        cv2.putText(im0, text_cxy, (x, y) ,  cv2.FONT_ITALIC, 1.2, (0,0,255), 3)
+                        
+                        #print("count is %d" %count)
+                        print('点 (%d, %d) 的三维坐标 (x:%.1fcm, y:%.1fcm, z:%.1fcm)' % (int(x), int(y), 
+                            points_3d[int(y), int(x), 0]/10, 
+                            points_3d[int(y), int(x), 1]/10, 
+                            points_3d[int(y), int(x), 2]/10) )
+
+
+                        dis = ( (points_3d[int(y), int(x), 0] ** 2 + points_3d[int(y), int(x), 1] ** 2 + points_3d[int(y), int(x), 2] **2) ** 0.5 ) / 10
+                        print('点 (%d, %d) 的 %s 距离左摄像头的相对距离为 %0.1f cm' %(x, y,label, dis) )
+                    
+
+                        text_x = "x:%.1fcm" %(points_3d[int(y), int(x), 0]/10)
+                        text_y = "y:%.1fcm" %(points_3d[int(y), int(x), 1]/10)
+                        text_z = "z:%.1fcm" %(points_3d[int(y), int(x), 2]/10)
+                        text_dis = "dis:%.1fcm" %dis
+
+                        cv2.rectangle(im0,(xyxy[0]+(xyxy[2]-xyxy[0]),xyxy[1]),(xyxy[0]+(xyxy[2]-xyxy[0])+5+220,xyxy[1]+150),colors[int(cls)],-1);
+                        cv2.putText(im0, text_x, (xyxy[0]+(xyxy[2]-xyxy[0])+5, xyxy[1]+30),  cv2.FONT_ITALIC, 1.2, (255,255,255), 3)
+                        cv2.putText(im0, text_y, (xyxy[0]+(xyxy[2]-xyxy[0])+5, xyxy[1]+65),  cv2.FONT_ITALIC, 1.2, (255, 255, 255), 3)
+                        cv2.putText(im0, text_z, (xyxy[0]+(xyxy[2]-xyxy[0])+5, xyxy[1]+100), cv2.FONT_ITALIC, 1.2, (255, 255, 255), 3)
+                        cv2.putText(im0, text_dis, (xyxy[0]+(xyxy[2]-xyxy[0])+5, xyxy[1]+145), cv2.FONT_ITALIC, 1.2, (255, 255, 255), 3)
+
+
+                        t4 = time_synchronized()
+                        print(f'Done. ({t4 - t3:.3f}s)')
+
+
             # Stream results
             im0 = annotator.result()
             if view_img:
@@ -217,7 +345,7 @@ def run(
 def parse_opt():
     parser = argparse.ArgumentParser()
     parser.add_argument('--weights', nargs='+', type=str, default=ROOT / 'best.pt', help='model path or triton URL')
-    parser.add_argument('--source', type=str, default=ROOT / 'data/images/bus.jpg', help='file/dir/URL/glob/screen/0(webcam)')
+    parser.add_argument('--source', type=str, default=ROOT / 'data/images/15.jpg', help='file/dir/URL/glob/screen/0(webcam)')
     parser.add_argument('--data', type=str, default=ROOT / 'data/data.yaml', help='(optional) dataset.yaml path')
     parser.add_argument('--imgsz', '--img', '--img-size', nargs='+', type=int, default=[640], help='inference size h,w')
     parser.add_argument('--conf-thres', type=float, default=0.3, help='confidence threshold')
@@ -238,7 +366,7 @@ def parse_opt():
     parser.add_argument('--name', default='exp', help='save results to project/name')
     parser.add_argument('--exist-ok', action='store_true', help='existing project/name ok, do not increment')
     parser.add_argument('--line-thickness', default=2, type=int, help='bounding box thickness (pixels)')
-    parser.add_argument('--hide-labels', default=False, action='store_true', help='hide labels')
+    parser.add_argument('--hide-labels', default=True, action='store_true', help='hide labels')
     parser.add_argument('--hide-conf', default=False, action='store_true', help='hide confidences')
     parser.add_argument('--half', action='store_true', help='use FP16 half-precision inference')
     parser.add_argument('--dnn', action='store_true', help='use OpenCV DNN for ONNX inference')
