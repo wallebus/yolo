@@ -7,7 +7,7 @@
     ![result](.github/data.png)
     <br>
   - 训练环境：租用 [AutoDl](https://www.autodl.com/home) 云服务器所提供的`yolov5` 环境 `ubuntu` `RTX2080TI 11G`
-  - 训练结果：训练轮数为 100 map_0.5=0.935 [image](./runs/train/exp/val_batch0_labels.jpg) ![charts](./runs/train/exp/results.png)
+  - 训练结果：训练50轮后趋于收敛 map_0.5=0.935 [image](./runs/train/exp/val_batch0_labels.jpg) ![charts](./runs/train/exp/results.png)
   - 使用`tfjs`部署在网页 https://person-count.netlify.app (图片推断于本地进行,模型大小为 22M)
   - 本地推断：`python detect.py --weights runs/train/exp3/weights/best.pt`
     <br>
@@ -25,19 +25,28 @@
   - 数据下载
     已经过数据格式转换与数据筛查：[阿里云盘](https://www.aliyundrive.com/s/XVmtThMd8zf)（自解压文件）
     <br>
-  - 训练
+  - 训练自定义数据集（可参考云盘数据格式）
     - 先将数据解压至该目录
     - 本地训练需先安装`cuda` https://pytorch.org/get-started/previous-versions/
-    ```bash
-    python train.py --data data.yaml --cfg yolo.yaml --weights yolov5s.pt --epochs 50  --batch-size 16 --device 0
-      - data data/data.yaml # 训练数据集的位置，分类
-      - cfg models/yolo.yaml # 训练参数 仅更改 nc
-      - weights yolov5s # 预训练权重 可加快训练速度
-      - epochs number # 训练轮数
-      - batch-size # 该值依机器性能而定，越大所需要的gpu显存越多,以我本机为例（GTX1050 3G）仅能设置为2
-      - device # cup(不推荐) | 0(单gpu训练)| 0,1,2(多gpu训练)
-    ```
+    <br>
+    
+      ```bash
+      python train.py --data data.yaml --cfg yolo.yaml --weights yolov5s.pt --epochs 50  --batch-size 16 --device 0
+
+        - data data/data.yaml # 训练数据集的位置，分类
+
+        - cfg models/yolo.yaml # 训练参数 仅更改 nc
+
+        - weights yolov5s # 预训练权重 可加快训练速度
+
+        - epochs number # 训练轮数
+
+        - batch-size # 该值依机器性能而定，越大所需要的gpu显存越多,以我本机为例（GTX1050 3G）仅能设置为2
+
+        - device # cup(不推荐) | 0(单gpu训练)| 0,1,2(多gpu训练)
+      ```
   - 训练完成的结果位于 runs/train/
+ 
   - 模型格式转换请参考 export.py 中的命令
 
 ---
